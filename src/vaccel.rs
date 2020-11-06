@@ -77,8 +77,8 @@ pub fn image_classification(
         vaccel_image_classification(
             sess,
             img.as_mut_ptr() as *mut c_void,
-            out_text.as_mut_ptr() as *mut i8,
-            out_imgname.as_mut_ptr() as *mut i8,
+            out_text.as_mut_ptr(),
+            out_imgname.as_mut_ptr(),
             img.len() as u64,
             out_text.len() as u64,
             out_imgname.len() as u64,
@@ -101,7 +101,7 @@ pub fn image_detection(
         vaccel_image_detection(
             sess,
             img.as_mut_ptr() as *mut c_void,
-            out_imgname.as_mut_ptr() as *mut i8,
+            out_imgname.as_mut_ptr(),
             img.len() as u64,
             out_imgname.len() as u64
         ) as u32
@@ -123,7 +123,7 @@ pub fn image_segmentation(
         vaccel_image_segmentation(
             sess,
             img.as_mut_ptr() as *mut c_void,
-            out_imgname.as_mut_ptr() as *mut i8,
+            out_imgname.as_mut_ptr(),
             img.len() as u64,
             out_imgname.len() as u64
         ) as u32
