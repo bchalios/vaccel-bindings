@@ -1,5 +1,6 @@
 extern crate bindgen;
 
+use cmake;
 use std::env;
 use std::path::PathBuf;
 
@@ -7,10 +8,11 @@ fn main() {
     // Tell cargo to tell rustc to link the system vaccel_runtime.h
     // shared library.
     println!("cargo:rustc-link-lib=vaccel");
-    
+
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=wrapper.h");
 
+    /*
     let mut vaccel_lib = pkg_config::Config::new()
         .probe("vaccel")
         .expect("Could not find libvaccel");
@@ -19,6 +21,24 @@ fn main() {
     clang_arg.push_str(
         &vaccel_lib.include_paths.pop().unwrap().into_os_string().into_string()
         .unwrap());
+    */
+    let clang_arg = match pkg_config::Config::new().probe("vaccel") {
+        Ok(mut lib) => String::from(format!(
+            "-I{}",
+            &mut lib
+                .include_paths
+                .pop()
+                .unwrap()
+                .into_os_string()
+                .into_string()
+                .unwrap(),
+        )),
+        Err(_) => {
+            format!("-I{}/include", cmake::build("vaccelrt").display())
+        }
+    };
+
+    println!("vaccelrt include path: {}", clang_arg);
 
     // The bindgen::Builder is the main entry point
     // to bindgen, and lets you build up options for
