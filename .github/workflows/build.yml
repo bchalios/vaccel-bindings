@@ -1,0 +1,34 @@
+name: Test Building bindings
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [self-hosted, "${{ matrix.archconfig }}"]
+
+    strategy:
+      matrix:
+        archconfig: [x86_64, aarch64]
+        build_type: [debug, release]
+      fail-fast: false
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build bindings
+      run: |
+        if [[ ${{matrix.build_type}} == "release" ]]
+        then
+          sudo cargo build --release
+        else
+          sudo cargo build
+        fi
