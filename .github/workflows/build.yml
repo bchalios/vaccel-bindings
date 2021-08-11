@@ -43,3 +43,12 @@ jobs:
         else
           cargo build -j $(nproc)
         fi
+
+    - name: Run Session example
+      run: cargo run --example session
+
+    - name: Run SavedModel example
+      run: cargo run --example tf_model
+
+    - name: Run inference example
+      run: cargo run --example tf_inference
